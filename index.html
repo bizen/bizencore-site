@@ -51,7 +51,7 @@
   @keyframes grain { 0%{transform:translate(0,0)} 20%{transform:translate(-4%,3%)} 40%{transform:translate(3%,-2%)} 60%{transform:translate(-2%,-4%)} 80%{transform:translate(4%,2%)} 100%{transform:translate(0,0)} }
   /* 文字の層。場面ごとに JS で出し入れする */
   .overlay { position: fixed; inset: 0; z-index: 12; pointer-events: none; }
-  .scene { position: absolute; inset: 0; padding-inline: var(--gutter); opacity: 0; visibility: hidden; will-change: opacity, transform; }
+  .scene { position: absolute; inset: 0; padding-inline: var(--gutter); opacity: 0; visibility: hidden; will-change: opacity, transform; isolation: isolate; }
   .scene.hero, .scene.manifesto, .scene.marquee, .scene.profile, .scene.foot { height: auto; min-height: 0; }
   .scene.door { display: grid; place-items: end center; padding-bottom: 12vh; color: #1d2020; }
   .door-line { margin: 0; font-family: var(--serif); font-size: clamp(34px, 4.4vw, 72px); line-height: 1; text-align: center; display: grid; gap: 12px; }
@@ -204,6 +204,37 @@
   @media (pointer: fine) { body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; } }
 
   @media (prefers-reduced-motion: reduce) { .grain, .hero .meta .scroll span { animation: none; } }
+  @media (max-width: 760px) {
+    /* 3D の上で文字が読めるよう、暗い場面は文字の後ろに薄い幕を敷く */
+    .scene.manifesto::before, .scene.profile::before, .scene.foot::before, .scene.descent::before, .works-scene::before {
+      content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+      background: linear-gradient(180deg, rgba(6,8,10,.62) 0%, rgba(6,8,10,.18) 42%, rgba(6,8,10,.18) 58%, rgba(6,8,10,.7) 100%);
+    }
+    .works-scene::before { background: linear-gradient(0deg, rgba(6,8,10,.82) 0%, rgba(6,8,10,.5) 38%, rgba(6,8,10,0) 58%); }
+    .scene.manifesto, .scene.profile, .scene.foot, .works-scene, .scene.descent { text-shadow: 0 1px 14px rgba(0,0,0,.55); }
+    .scene.manifesto { padding-top: 15vh; }
+    .manifesto h2 { font-size: 31px; line-height: 1.02; }
+    .manifesto .jp { font-size: 13px; margin-top: 3vh; }
+    .hero .meta { padding-bottom: 5vw; }
+    .hero .meta .jp { display: none; }
+    .wordmark { margin-bottom: 2vw; }
+    .cap { gap: 10px; padding-bottom: 4vh; }
+    .cap .num { flex-wrap: wrap; row-gap: 4px; }
+    .cap .num .hint { margin-left: 0; padding-left: 0; flex-basis: 100%; }
+    .cap .title { font-size: 44px; }
+    .cap .desc { font-size: 13px; min-height: 0; }
+    .cap .feats { margin-top: 8px; gap: 3px; font-size: 12px; }
+    .cap .desc small, .cap dl { display: none; }
+    .scene.profile { padding-top: 11vh; gap: 14px; }
+    .profile h3 { font-size: 34px; }
+    .profile .bio { gap: 12px; }
+    .profile .bio p { font-size: 15px; }
+    .profile .bio .jp { font-size: 12px; line-height: 1.8; }
+    .profile .lists { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .profile .lists li { padding: 7px 0; font-size: 12px; }
+    .profile .lists li span { display: none; }
+    .foot .cta { padding-top: 9vh; gap: 18px; }
+  }
 </style>
 </head>
 <body>
@@ -355,6 +386,8 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse = matchMedia('(pointer: coarse)').matches;
+// スマホや小さい画面では、画素の密度と形の細かさを落として軽くする
+const lowPower = coarse || Math.min(screen.width, screen.height) < 820;
 const gsap = window.gsap;
 gsap.registerPlugin(window.ScrollTrigger);
 
@@ -537,7 +570,7 @@ try {
   runIntro();
   throw e;
 }
-const DPR = Math.min(devicePixelRatio, coarse ? 1.4 : 1.75);
+const DPR = Math.min(devicePixelRatio, lowPower ? 1.25 : 1.75);
 renderer.setPixelRatio(DPR);
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.NeutralToneMapping;
@@ -656,8 +689,8 @@ const glowLine = new THREE.ShaderMaterial({
 });
 function ring(r, tube, glow = true) {
   const g = new THREE.Group();
-  g.add(new THREE.Mesh(new THREE.TorusGeometry(r, tube, 12, 360), metal));
-  if (glow) g.add(new THREE.Mesh(new THREE.TorusGeometry(r - tube - 0.03, Math.max(0.025, tube * 0.1), 5, 360), glowLine));
+  g.add(new THREE.Mesh(new THREE.TorusGeometry(r, tube, lowPower ? 8 : 12, lowPower ? 160 : 360), metal));
+  if (glow) g.add(new THREE.Mesh(new THREE.TorusGeometry(r - tube - 0.03, Math.max(0.025, tube * 0.1), 5, lowPower ? 160 : 360), glowLine));
   return g;
 }
 const spin = child => { const w = new THREE.Group(); w.add(child); return w; };
@@ -692,7 +725,7 @@ const strandMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.6, 0.78
 for (let k = 0; k < 2; k++) {
   const pts = [];
   for (let y = HY0; y <= HY1; y += 0.5) { const a = y * TW + k * Math.PI; pts.push(new THREE.Vector3(Math.cos(a) * HR, y, Math.sin(a) * HR)); }
-  helix.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 2600, 0.06, 6), strandMat));
+  helix.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), lowPower ? 1100 : 2600, 0.06, lowPower ? 4 : 6), strandMat));
 }
 {
   const n = Math.floor((HY1 - HY0) / 0.9);
@@ -883,7 +916,7 @@ ripples.renderOrder = 2;
 /* ---------- 霧の帯 ---------- */
 const mistMats = [];
 const mistGeo = new THREE.PlaneGeometry(46, 7);
-for (let i = 0; i < 16; i++) {
+for (let i = 0; i < (lowPower ? 10 : 16); i++) {
   const m = new THREE.ShaderMaterial({
     uniforms: { uTime: { value: 0 }, uColor: { value: new THREE.Color('#e3e7e5') }, uO: { value: 0.55 }, uSeed: { value: Math.random() * 50 } },
     vertexShader: `varying vec2 vUv; varying vec3 vW; void main(){ vUv=uv; vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
@@ -930,7 +963,7 @@ dust.renderOrder = 4;
 scene.add(dust);
 const starMat = pointsMat('#eef2ff', 380, false);
 starMat.fog = false;
-const stars = new THREE.Points(scatter(1400, () => {
+const stars = new THREE.Points(scatter(lowPower ? 800 : 1400, () => {
   const u = Math.random() * Math.PI * 2, v = Math.random() * 0.9 + 0.1, r = 170;
   return [Math.cos(u) * Math.sqrt(1 - v * v) * r, v * r, Math.sin(u) * Math.sqrt(1 - v * v) * r];
 }), starMat);
@@ -950,7 +983,8 @@ composer.setSize(innerWidth, innerHeight);
 composer.addPass(new RenderPass(scene, camera));
 const afterimage = new AfterimagePass(0);
 composer.addPass(afterimage);
-const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), 0.6, 0.85, 0.92);
+const BLOOM_DIV = lowPower ? 3 : 2;
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / BLOOM_DIV, innerHeight / BLOOM_DIV), 0.6, 0.85, 0.92);
 composer.addPass(bloom);
 composer.addPass(new OutputPass());
 
@@ -981,9 +1015,9 @@ const SCRIPT = [
   { k: 'hero', pos: V(0, 1.9, 10.5), look: V(0, 2.75, 0) },
   { a: 'hero', b: 'manifesto', f: 0.42, pos: V(0, 2.65, 2.4), look: V(0, 2.65, -4) },     // 開いていく扉へまっすぐ近づく
   { a: 'hero', b: 'manifesto', f: 0.62, pos: V(0, 2.8, -2.2), look: V(0, 4, -30) },        // 扉のすき間の光を抜ける
-  { k: 'manifesto', pos: V(9, 11, -8), look: V(0, 24, -60) },                               // 全体が姿を現す
-  { a: 'manifesto', b: 'pass', f: 0.5, pos: V(4, 40, -34), look: V(0, 32, -60) },          // 高く飛んで頂上へ
-  { k: 'pass', pos: V(0, 62, -53.6), look: V(0, 23, -60) },                                 // 極の輪の真上から見下ろす
+  { k: 'manifesto', pos: V(9, 11, -8), look: V(0, 24, -60), wide: 1.1 },                   // 全体が姿を現す
+  { a: 'manifesto', b: 'pass', f: 0.5, pos: V(4, 40, -34), look: V(0, 32, -60), wide: 1.3 }, // 高く飛んで頂上へ
+  { k: 'pass', pos: V(0, 62, -53.6), look: V(0, 23, -60), wide: 1.55 },                     // 極の輪の真上から見下ろす
   { a: 'pass', b: 'w0', f: 0.5, pos: V(0, 31, -53.6), look: V(0, 23, -60.2) },               // 極の輪を真下へくぐる
   { k: 'w0', polar: { ang: 90, r: 11.6, y: 23.6 }, facing: true, work: 0 },                // レールに乗って、bizencore OS の前へ
   { a: 'w0', b: 'w1', f: 0.55, polar: { ang: 97, r: 11.6, y: 23.6 }, facing: true, work: 0 }, // bizencore OS の前で、ゆっくり回り込みながら止まる
@@ -997,17 +1031,23 @@ const D2R = Math.PI / 180;
 let NODES = [];
 function facingLook(angDeg, out) {
   const a = angDeg * D2R, off = portrait ? 0 : 0.95;
-  return out.set(C.x + Math.cos(a) * PANEL_R - Math.sin(a) * off, C.y, C.z + Math.sin(a) * PANEL_R + Math.cos(a) * off);
+  return out.set(C.x + Math.cos(a) * PANEL_R - Math.sin(a) * off, C.y - (portrait ? 1.9 : 0), C.z + Math.sin(a) * PANEL_R + Math.cos(a) * off);
 }
 function buildNodes() {
   const K = Object.fromEntries(KEYS.map(k => [k.name, k]));
   NODES = SCRIPT.map(sn => {
     const n = { p: sn.k ? K[sn.k].p : K[sn.a].p + (K[sn.b].p - K[sn.a].p) * sn.f, polar: null, facing: !!sn.facing };
     if (sn.polar) {
-      n.polar = { ang: sn.polar.ang, r: portrait && sn.facing ? sn.polar.r + 2.4 : sn.polar.r, y: sn.polar.y };
+      // 縦長の画面では、作品の前は少し引き、らせんを昇る場面は軸から離れて文字と重ならないようにする
+      const pr = !portrait ? sn.polar.r : sn.facing ? sn.polar.r + 2.4 : sn.polar.r * 1.9;
+      n.polar = { ang: sn.polar.ang, r: pr, y: sn.polar.y };
+      if (portrait && !sn.facing && sn.look) {
+        const a = sn.polar.ang * D2R;
+        sn = { ...sn, look: sn.look.clone().add(V(Math.sin(a) * 3.2, 0, -Math.cos(a) * 3.2)) };
+      }
       const a = n.polar.ang * D2R;
       n.pos = V(C.x + Math.cos(a) * n.polar.r, n.polar.y, C.z + Math.sin(a) * n.polar.r);
-    } else n.pos = sn.pos;
+    } else n.pos = portrait && sn.wide ? sn.look.clone().add(sn.pos.clone().sub(sn.look).multiplyScalar(sn.wide)) : sn.pos;
     n.look = sn.facing ? facingLook(sn.polar.ang, V()) : sn.look;
     if (sn.facing) n.ring = sn.polar.ang - sn.work * 90;
     return n;
@@ -1250,8 +1290,9 @@ function frame() {
   orbHome.set(-1.9 + Math.cos(t * 0.3) * 0.25, 4.1 + Math.sin(t * 0.8 + 1) * 0.25, -1.2);
   // 道の少し先の、さらに視線の先 4 に置く（カメラに重ならないように）
   orbAhead.addScaledVector(orbLook.sub(orbAhead).normalize(), 4);
-  orbAhead.y += 0.5 + Math.sin(t * 1.2) * 0.12 + 1.7 * (SCENES.works._v || 0);   // 作品を見ている間はパネルの上へ逃がす
+  orbAhead.y += 0.5 + Math.sin(t * 1.2) * 0.12 + (portrait ? 3.2 : 1.7) * (SCENES.works._v || 0);   // 作品を見ている間はパネルの上へ逃がす
   orb.position.lerpVectors(orbHome, orbAhead, lead);
+  orb.scale.setScalar(Math.max(0.001, 1 - (SCENES.night._v || 0)));   // 旅の終わり（星空）では案内の役目を終えて消える
 
   // パネル。カーソルの下にあるものは少し手前に来る
   if (pointer.moved && !coarse) {
@@ -1313,7 +1354,7 @@ function resize() {
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
   composer.setSize(innerWidth, innerHeight);
-  bloom.setSize(innerWidth / 2, innerHeight / 2);
+  bloom.setSize(innerWidth / BLOOM_DIV, innerHeight / BLOOM_DIV);
   placeWorkKeys();
   measure();
 }
