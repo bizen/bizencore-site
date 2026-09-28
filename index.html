@@ -66,6 +66,7 @@
   .works-scene { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
   @media (max-width: 760px) { .works-scene { grid-template-columns: 1fr; } }
   .flash { position: fixed; inset: 0; z-index: 6; pointer-events: none; opacity: 0; background: radial-gradient(ellipse 70% 80% at 50% 50%, #fffaf0 0%, #f6e3bd 45%, #cfa46a 100%); }
+  body.low .grain { display: none; }
   .vignette { position: fixed; inset: 0; z-index: 4; pointer-events: none; background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 50%, rgba(3,4,5,.55) 100%); }
 
   /* ---------- 読み込み ---------- */
@@ -392,6 +393,7 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse = matchMedia('(pointer: coarse)').matches;
 // スマホや小さい画面では、画素の密度と形の細かさを落として軽くする
 const lowPower = coarse || Math.min(screen.width, screen.height) < 820;
+document.body.classList.toggle('low', lowPower);
 const gsap = window.gsap;
 gsap.registerPlugin(window.ScrollTrigger);
 
@@ -631,7 +633,7 @@ const NOISE = `
   float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
   float vnoise(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.-2.*f);
     return mix(mix(hash(i),hash(i+vec2(1,0)),u.x), mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),u.x), u.y); }
-  float fbm(vec2 p){ float v=0., a=.5; for(int i=0;i<5;i++){ v+=a*vnoise(p); p=p*2.03+vec2(17.1,9.2); a*=.5; } return v; }
+  float fbm(vec2 p){ float v=0., a=.5; for(int i=0;i<${lowPower ? 4 : 5};i++){ v+=a*vnoise(p); p=p*2.03+vec2(17.1,9.2); a*=.5; } return v; }
 `;
 const haloMat = (color, intensity, stretch = 1) => new THREE.ShaderMaterial({
   uniforms: { uColor: { value: new THREE.Color(color) }, uI: { value: intensity }, uS: { value: stretch } },
@@ -683,7 +685,9 @@ const C = new THREE.Vector3(0, 23, -60);
 const machine = new THREE.Group();
 machine.position.copy(C);
 world.add(machine);
-const metal = new THREE.MeshPhysicalMaterial({ color: '#1c1813', roughness: 0.3, metalness: 0.85, clearcoat: 0.6, clearcoatRoughness: 0.35, envMapIntensity: 0.5 });
+const metal = lowPower
+  ? new THREE.MeshStandardMaterial({ color: '#1c1813', roughness: 0.32, metalness: 0.85 })
+  : new THREE.MeshPhysicalMaterial({ color: '#1c1813', roughness: 0.3, metalness: 0.85, clearcoat: 0.6, clearcoatRoughness: 0.35, envMapIntensity: 0.5 });
 // 輪の内側に刻んだ光の線。霧を通して遠くからもうっすら見える
 const glowLine = new THREE.ShaderMaterial({
   uniforms: { uColor: { value: new THREE.Color(0.45, 0.85, 1.15) }, uO: { value: 0.45 } },
@@ -735,7 +739,7 @@ for (let k = 0; k < 2; k++) {
   const n = Math.floor((HY1 - HY0) / 0.9);
   const rungGeo = new THREE.CylinderGeometry(0.028, 0.028, HR * 2, 5); rungGeo.rotateZ(Math.PI / 2);
   const rungs = new THREE.InstancedMesh(rungGeo, new THREE.MeshBasicMaterial({ color: '#ffffff' }), n);
-  const beads = new THREE.InstancedMesh(new THREE.SphereGeometry(0.075, 10, 10), new THREE.MeshBasicMaterial({ color: '#ffffff' }), n * 2);
+  const beads = new THREE.InstancedMesh(new THREE.SphereGeometry(0.075, lowPower ? 5 : 10, lowPower ? 5 : 10), new THREE.MeshBasicMaterial({ color: '#ffffff' }), n * 2);
   const BASES = [new THREE.Color(0.8, 0.86, 0.92), new THREE.Color(0.35, 0.72, 0.95), new THREE.Color(0.2, 0.45, 0.85), new THREE.Color(0.85, 0.62, 0.3)];
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), Y = new THREE.Vector3(0, 1, 0), one = new THREE.Vector3(1, 1, 1);
   for (let i = 0; i < n; i++) {
@@ -892,6 +896,7 @@ mirror.scale.y = -1;
 scene.add(mirror);
 const pairs = [];
 (function pair(a, b) { pairs.push([a, b]); a.children.forEach((c, i) => pair(c, b.children[i])); })(world, mirror);
+const mirrorOf = new Map(pairs);
 
 const groundMat = new THREE.MeshStandardMaterial({ color: '#b9c0be', roughness: 1, metalness: 0, transparent: true, opacity: 0.8 });
 const ground = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), groundMat);
@@ -920,7 +925,7 @@ ripples.renderOrder = 2;
 /* ---------- 霧の帯 ---------- */
 const mistMats = [];
 const mistGeo = new THREE.PlaneGeometry(46, 7);
-for (let i = 0; i < (lowPower ? 10 : 16); i++) {
+for (let i = 0; i < (lowPower ? 6 : 16); i++) {
   const m = new THREE.ShaderMaterial({
     uniforms: { uTime: { value: 0 }, uColor: { value: new THREE.Color('#e3e7e5') }, uO: { value: 0.55 }, uSeed: { value: Math.random() * 50 } },
     vertexShader: `varying vec2 vUv; varying vec3 vW; void main(){ vUv=uv; vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
@@ -962,7 +967,7 @@ function scatter(n, fn) {
   return g;
 }
 const dustMat = pointsMat('#fff4dc', 34, true);
-const dust = new THREE.Points(scatter(coarse ? 700 : 1600, () => [(Math.random() - 0.5) * 30, Math.random() * 9, 12 - Math.random() * 80]), dustMat);
+const dust = new THREE.Points(scatter(lowPower ? 350 : 1600, () => [(Math.random() - 0.5) * 30, Math.random() * 9, 12 - Math.random() * 80]), dustMat);
 dust.renderOrder = 4;
 scene.add(dust);
 const starMat = pointsMat('#eef2ff', 380, false);
@@ -980,17 +985,20 @@ poleStar.position.set(0, 168, -60);
 poleStar.rotation.x = Math.PI / 2;
 scene.add(poleStar);
 
-/* ---------- 後処理 ---------- */
-const composer = new EffectComposer(renderer);
-composer.setPixelRatio(DPR);
-composer.setSize(innerWidth, innerHeight);
-composer.addPass(new RenderPass(scene, camera));
-const afterimage = new AfterimagePass(0);
-composer.addPass(afterimage);
-const BLOOM_DIV = lowPower ? 3 : 2;
-const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / BLOOM_DIV, innerHeight / BLOOM_DIV), 0.6, 0.85, 0.92);
-composer.addPass(bloom);
-composer.addPass(new OutputPass());
+/* ---------- 後処理（スマホでは光のにじみと残像をやめて、直接描く） ---------- */
+let composer = null, afterimage = null, bloom = null;
+const BLOOM_DIV = 2;
+if (!lowPower) {
+  composer = new EffectComposer(renderer);
+  composer.setPixelRatio(DPR);
+  composer.setSize(innerWidth, innerHeight);
+  composer.addPass(new RenderPass(scene, camera));
+  afterimage = new AfterimagePass(0);
+  composer.addPass(afterimage);
+  bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / BLOOM_DIV, innerHeight / BLOOM_DIV), 0.6, 0.85, 0.92);
+  composer.addPass(bloom);
+  composer.addPass(new OutputPass());
+}
 
 /* ================= カメラの道と、時刻の色 ================= */
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -1269,7 +1277,7 @@ function frame() {
   panelRing.rotation.y = -ringAngleAt(p) * D2R;
   stars.rotation.y = t * 0.035;
   poleStar.material.uniforms.uI.value = state.stars;
-  afterimage.uniforms.damp.value = 0.9 * THREE.MathUtils.smoothstep(state.stars, 0.45, 1);
+  if (afterimage) afterimage.uniforms.damp.value = 0.9 * THREE.MathUtils.smoothstep(state.stars, 0.45, 1);
 
   // 石板の扉。宣言までの前半で開き、カメラが越えた瞬間に光で満たして、天球儀の世界に切り替える
   const doorOpen = THREE.MathUtils.smoothstep(p, KEYS[1].p * 0.04, KEYS[1].p * 0.24);
@@ -1338,6 +1346,7 @@ function frame() {
     const [a, b] = pairs[i];
     b.position.copy(a.position); b.quaternion.copy(a.quaternion); b.scale.copy(a.scale); b.visible = a.visible;
   }
+  if (lowPower) { mirrorOf.get(machine).visible = false; mirrorOf.get(panelRing).visible = false; }   // スマホでは石板と太陽だけ映す
 
   // 流れる帯。スクロールの速さで加速する
   const vel = lenis ? lenis.velocity : (st - lastST);
@@ -1348,7 +1357,23 @@ function frame() {
   mq1.style.transform = `translate3d(${-x}px,0,0)`;
   mq2.style.transform = `translate3d(${x - w1}px,0,0)`;
 
-  composer.render();
+  if (composer) composer.render(); else renderer.render(scene, camera);
+  adaptQuality(dt);
+}
+
+// 描画が遅い状態が続いたら、画素の密度を段階的に下げる
+let perfT = 0, perfN = 0, dpr = DPR;
+function adaptQuality(dt) {
+  if (!lowPower || dpr <= 0.8) return;
+  perfT += dt; perfN++;
+  if (perfT < 1.5) return;
+  const avg = perfT / perfN;
+  perfT = 0; perfN = 0;
+  if (avg > 0.025) {
+    dpr = Math.max(0.8, dpr - 0.15);
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(innerWidth, innerHeight);
+  }
 }
 
 function resize() {
@@ -1357,8 +1382,7 @@ function resize() {
   camera.fov = portrait ? 52 : 38;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
-  composer.setSize(innerWidth, innerHeight);
-  bloom.setSize(innerWidth / BLOOM_DIV, innerHeight / BLOOM_DIV);
+  if (composer) { composer.setSize(innerWidth, innerHeight); bloom.setSize(innerWidth / BLOOM_DIV, innerHeight / BLOOM_DIV); }
   placeWorkKeys();
   measure();
 }
