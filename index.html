@@ -66,7 +66,7 @@
   .works-scene { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
   @media (max-width: 760px) { .works-scene { grid-template-columns: 1fr; } }
   .flash { position: fixed; inset: 0; z-index: 6; pointer-events: none; opacity: 0; background: radial-gradient(ellipse 70% 80% at 50% 50%, #fffaf0 0%, #f6e3bd 45%, #cfa46a 100%); }
-  body.low .grain { display: none; }
+  body.low .grain { animation: none; inset: 0; opacity: .07; }
   .vignette { position: fixed; inset: 0; z-index: 4; pointer-events: none; background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 50%, rgba(3,4,5,.55) 100%); }
 
   /* ---------- 読み込み ---------- */
@@ -925,7 +925,7 @@ ripples.renderOrder = 2;
 /* ---------- 霧の帯 ---------- */
 const mistMats = [];
 const mistGeo = new THREE.PlaneGeometry(46, 7);
-for (let i = 0; i < (lowPower ? 6 : 16); i++) {
+for (let i = 0; i < (lowPower ? 10 : 16); i++) {
   const m = new THREE.ShaderMaterial({
     uniforms: { uTime: { value: 0 }, uColor: { value: new THREE.Color('#e3e7e5') }, uO: { value: 0.55 }, uSeed: { value: Math.random() * 50 } },
     vertexShader: `varying vec2 vUv; varying vec3 vW; void main(){ vUv=uv; vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
@@ -967,7 +967,7 @@ function scatter(n, fn) {
   return g;
 }
 const dustMat = pointsMat('#fff4dc', 34, true);
-const dust = new THREE.Points(scatter(lowPower ? 350 : 1600, () => [(Math.random() - 0.5) * 30, Math.random() * 9, 12 - Math.random() * 80]), dustMat);
+const dust = new THREE.Points(scatter(lowPower ? 700 : 1600, () => [(Math.random() - 0.5) * 30, Math.random() * 9, 12 - Math.random() * 80]), dustMat);
 dust.renderOrder = 4;
 scene.add(dust);
 const starMat = pointsMat('#eef2ff', 380, false);
@@ -985,20 +985,19 @@ poleStar.position.set(0, 168, -60);
 poleStar.rotation.x = Math.PI / 2;
 scene.add(poleStar);
 
-/* ---------- 後処理（スマホでは光のにじみと残像をやめて、直接描く） ---------- */
-let composer = null, afterimage = null, bloom = null;
-const BLOOM_DIV = 2;
-if (!lowPower) {
-  composer = new EffectComposer(renderer);
-  composer.setPixelRatio(DPR);
-  composer.setSize(innerWidth, innerHeight);
-  composer.addPass(new RenderPass(scene, camera));
-  afterimage = new AfterimagePass(0);
-  composer.addPass(afterimage);
-  bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / BLOOM_DIV, innerHeight / BLOOM_DIV), 0.6, 0.85, 0.92);
-  composer.addPass(bloom);
-  composer.addPass(new OutputPass());
-}
+/* ---------- 後処理。スマホでは光のにじみを 1/4 の解像度で計算し、夜の残像は使わない ---------- */
+const BLOOM_DIV = lowPower ? 4 : 2;
+const composer = new EffectComposer(renderer);
+composer.setPixelRatio(DPR);
+composer.setSize(innerWidth, innerHeight);
+composer.addPass(new RenderPass(scene, camera));
+const afterimage = lowPower ? null : new AfterimagePass(0);
+if (afterimage) composer.addPass(afterimage);
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / BLOOM_DIV, innerHeight / BLOOM_DIV), 0.6, 0.85, 0.92);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+// 画質の段階。スマホは 3 から始め、重い状態が続くと 2（にじみなし）→ 1（天球儀の映り込みなし）→ 0（画素の密度を下げる）と落とす
+let quality = 3;
 
 /* ================= カメラの道と、時刻の色 ================= */
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -1346,7 +1345,11 @@ function frame() {
     const [a, b] = pairs[i];
     b.position.copy(a.position); b.quaternion.copy(a.quaternion); b.scale.copy(a.scale); b.visible = a.visible;
   }
-  if (lowPower) { mirrorOf.get(machine).visible = false; mirrorOf.get(panelRing).visible = false; }   // スマホでは石板と太陽だけ映す
+  if (lowPower) {   // スマホでは、らせんとパネルの複製を省き、画質が落ちたら天球儀の輪の映り込みもやめる
+    mirrorOf.get(helix).visible = false;
+    mirrorOf.get(panelRing).visible = false;
+    if (quality < 2) mirrorOf.get(machine).visible = false;
+  }
 
   // 流れる帯。スクロールの速さで加速する
   const vel = lenis ? lenis.velocity : (st - lastST);
@@ -1357,23 +1360,24 @@ function frame() {
   mq1.style.transform = `translate3d(${-x}px,0,0)`;
   mq2.style.transform = `translate3d(${x - w1}px,0,0)`;
 
-  if (composer) composer.render(); else renderer.render(scene, camera);
+  if (quality >= 3) composer.render(); else renderer.render(scene, camera);
   adaptQuality(dt);
 }
 
-// 描画が遅い状態が続いたら、画素の密度を段階的に下げる
+// 描画が遅い状態が続いたら、画質を1段ずつ落とす
 let perfT = 0, perfN = 0, dpr = DPR;
 function adaptQuality(dt) {
-  if (!lowPower || dpr <= 0.8) return;
+  if (!lowPower || (quality === 0 && dpr <= 0.8)) return;
   perfT += dt; perfN++;
   if (perfT < 1.5) return;
   const avg = perfT / perfN;
   perfT = 0; perfN = 0;
-  if (avg > 0.025) {
-    dpr = Math.max(0.8, dpr - 0.15);
-    renderer.setPixelRatio(dpr);
-    renderer.setSize(innerWidth, innerHeight);
-  }
+  if (avg <= 0.025) return;
+  if (quality > 0) { quality--; return; }
+  dpr = Math.max(0.8, dpr - 0.15);
+  renderer.setPixelRatio(dpr);
+  renderer.setSize(innerWidth, innerHeight);
+  composer.setPixelRatio(dpr);
 }
 
 function resize() {
@@ -1382,7 +1386,8 @@ function resize() {
   camera.fov = portrait ? 52 : 38;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
-  if (composer) { composer.setSize(innerWidth, innerHeight); bloom.setSize(innerWidth / BLOOM_DIV, innerHeight / BLOOM_DIV); }
+  composer.setSize(innerWidth, innerHeight);
+  bloom.setSize(innerWidth / BLOOM_DIV, innerHeight / BLOOM_DIV);
   placeWorkKeys();
   measure();
 }
