@@ -1,0 +1,8 @@
+{
+  "channel": "production",
+  "platform": "darwin",
+  "arch": "arm64",
+  "published": false,
+  "updateMethod": "manual",
+  "pageUrl": "https://bizencore.com/downloads/"
+}

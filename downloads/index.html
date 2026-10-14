@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="bizencore terminal デスクトップ版のダウンロード、インストールと手動更新の案内。">
+  <title>Desktop downloads | bizencore</title>
+  <link rel="icon" href="favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme:dark; --bg:#0a0b0c; --ink:#e7eaec; --muted:#969fa7; --line:#30363c; --accent:#73ced9; --amber:#e6bc68; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.9 'IBM Plex Sans JP',sans-serif; letter-spacing:0; }
+    a { color:var(--accent); text-decoration:none; text-underline-offset:4px; }
+    a:hover { text-decoration:underline; }
+    a:focus-visible,button:focus-visible,summary:focus-visible { outline:2px solid var(--accent); outline-offset:5px; }
+    header,main,footer { width:min(960px,calc(100% - 48px)); margin:auto; }
+    header { min-height:84px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .brand { font:26px 'Instrument Serif',serif; color:var(--ink); white-space:nowrap; }
+    header nav { display:flex; flex-wrap:wrap; gap:20px; font-size:12px; }
+    main { padding:50px 0 72px; }
+    h1 { font:48px/1.15 'Instrument Serif',serif; margin:0 0 18px; overflow-wrap:anywhere; }
+    h1 sup { font-size:24px; vertical-align:super; }
+    h2 { font-size:17px; font-weight:500; margin:0 0 22px; }
+    p { margin:12px 0; }
+    .meta { color:var(--muted); font-size:13px; }
+    .download-row { margin-top:30px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+    .download { display:inline-flex; align-items:center; gap:10px; background:var(--ink); color:var(--bg); border:0; border-radius:6px; padding:12px 20px; font:500 14px 'IBM Plex Sans JP',sans-serif; min-height:46px; }
+    .download[aria-disabled="true"] { background:#24292d; color:var(--muted); pointer-events:none; }
+    .download svg { width:17px; height:17px; }
+    .warning { color:var(--amber); margin-top:24px; max-width:700px; }
+    .release-detail { margin-top:18px; color:var(--muted); }
+    .checksum { display:block; font:12px/1.8 ui-monospace,monospace; overflow-wrap:anywhere; }
+    figure { margin:38px 0 0; }
+    figure img { display:block; width:100%; height:auto; aspect-ratio:1380/900; object-fit:contain; }
+    figcaption { color:var(--muted); font-size:11px; margin-top:8px; }
+    section { padding:38px 0; border-bottom:1px solid var(--line); }
+    section:first-child { padding-top:0; }
+    section:last-child { border:0; }
+    ol { margin:0; padding-left:22px; }
+    li { padding:4px 0 4px 6px; }
+    code { font-family:ui-monospace,monospace; font-size:12px; overflow-wrap:anywhere; }
+    details { border-top:1px solid var(--line); padding:15px 0; }
+    summary { cursor:pointer; font-weight:500; }
+    details p { max-width:760px; color:var(--muted); }
+    footer { padding:24px 0 40px; display:flex; gap:20px; justify-content:space-between; flex-wrap:wrap; color:var(--muted); font-size:12px; }
+    @media(max-width:600px) { header,main,footer { width:calc(100% - 36px); } header { min-height:72px; gap:16px; } header nav { gap:12px; } main { padding-top:30px; } h1 { font-size:36px; } .brand { font-size:23px; } }
+  </style>
+</head>
+<body>
+  <header><a class="brand" href="../">bizen<i>core</i></a><nav aria-label="ナビゲーション"><a href="https://app.bizencore.com/">Web版</a><a href="#install">インストール</a><a href="#update">更新</a></nav></header>
+  <main>
+    <section aria-labelledby="title">
+      <h1 id="title">bizencore terminal<sup>2</sup></h1>
+      <p class="meta">Desktop / macOS 13以降 / Apple Silicon（M1以降）</p>
+      <div class="download-row">
+        <a id="download" class="download" aria-disabled="true" role="link">
+          <span id="download-label">公開準備中</span>
+        </a>
+        <span class="meta" id="release-status" role="status">実機確認が終わるまで、ダウンロードは提供しません。</span>
+      </div>
+      <p class="warning">このアプリはAppleのDeveloper ID署名・公証を受けていません。Appleによる安全性確認はなく、macOSが起動をブロックする場合があります。</p>
+      <p class="meta">Intel Mac、Windows、Linuxは現在の配布対象ではありません。サインインが必要です。Claude Code / Codexはご自身でインストール・認証してください。</p>
+      <div class="release-detail" id="release-detail" hidden><span id="release-version"></span><br><a id="checksums">SHA256SUMS</a> · <a id="release-notes">変更履歴と配布ファイル</a><code class="checksum" id="checksum"></code></div>
+      <figure><img src="desktop-screen.png" width="1380" height="900" alt="タスクリスト、中央の詳細パネル、エージェント起動フォームを並べたデスクトップ画面"><figcaption>テストデータによるデスクトップ画面。個人のタスクは含まれていません。</figcaption></figure>
+    </section>
+    <section id="install">
+      <h2>インストール</h2>
+      <ol>
+        <li>公開済みのZIPと<code>SHA256SUMS</code>を、このページのリンクから取得します。</li>
+        <li>ZIPのチェックサムを照合します。不一致の場合は起動せず、再ダウンロードしてください。</li>
+        <li>ZIPを展開し、<code>bizencore terminal.app</code>を「アプリケーション」に移します。</li>
+        <li>アプリを開き、bizencoreにサインインします。作業フォルダとエージェントを選び、明示的に起動してください。</li>
+      </ol>
+      <details><summary>macOSに起動をブロックされた場合</summary><p>安全性を確認できないアプリは開かないでください。配布元とチェックサムを確認し、未公証であることを理解したうえで、このアプリだけを許可すると判断した場合は、Appleの「プライバシーとセキュリティ」の案内を確認してください。許可や本人認証はご自身で行ってください。</p><p>OS全体の保護を無効化したり、隔離属性を削除する方法は案内しません。「破損している」と表示された場合は安全なものと決めつけず、取得し直してチェックサムを確認してください。</p><p><a href="https://support.apple.com/ja-jp/102445" target="_blank" rel="noopener noreferrer">Apple：Macでアプリを安全に開く</a></p></details>
+      <details><summary>Claude Code / Codexが見つからない場合</summary><p>アプリのエージェント診断で導入状態を確認してください。各CLIは別のソフトウェアです。自動インストールやAIサービスへの自動登録は行いません。ご自身の契約と認証を使います。</p></details>
+      <details><summary>サインイン・認証復元で止まる場合</summary><p>通信状態と、背後にmacOSのキーチェーンや本人認証のダイアログが出ていないか確認してください。アカウントや保存データを削除せず、再読み込みしてください。Google等の認証やmacOSの本人認証はご自身で完了してください。確認できるまでタスク・エージェント機能は使えません。</p></details>
+    </section>
+    <section id="update">
+      <h2>更新と旧版への戻し</h2>
+      <p>対応版では、新版が公開されるとヘッダー右上に更新アイコンが表示されます。押すとこのページが開きます。作業中のエージェントを止めたり、自動でインストールしたりはしません。</p>
+      <ol>
+        <li>作業を終えるかエージェントを明示的に停止し、<code>⌘Q</code>でアプリを完全終了します。ウィンドウを閉じるだけでは終了しません。</li>
+        <li>新しいZIPのチェックサムを確認し、展開します。旧版のアプリを別の場所に保管してから、新版を同じ場所に置きます。</li>
+        <li>アプリを起動し、アカウント・タスク・設定を確認してください。保存されたペインは勝手に起動しません。更新版でもmacOSが個別の起動許可を求める場合があります。</li>
+      </ol>
+      <p class="meta">問題があれば、アプリを完全終了してから保管した旧版へ戻してください。データ形式が変わる更新では、変更履歴の互換性案内に従ってください。0.1.7以前には新版通知がないため、このページから手動で確認します。</p>
+    </section>
+    <section id="privacy">
+      <h2>データと権限</h2>
+      <p>アカウント認証にはClerk、タスクや添付の同期にはConvexを使います。認証トークンの端末保存にはmacOSの暗号化機能を使います。作業フォルダ、ペイン配置、会話の紐付けなどは端末にも保存されます。</p>
+      <p>起動するCLIはローカルで動き、ご自身のAIサービスへの認証・契約・権限設定を使います。ファイルの読み書きやコマンド実行が可能なため、作業フォルダとCLIの許可を確認してください。一般CLIの権限までbizencoreが自動で制限・保証するものではありません。</p>
+      <p>更新確認では、公式の公開バージョン情報だけを取得します。アカウントの認証トークン、タスク、フォルダ、会話を更新サーバーへ送る設計ではありません。表示用フォントや認証SDKなどには外部サービスへの通信があります。</p>
+      <p class="meta">サインアウトするとbizencoreの画面をロックし、このアプリが起動したエージェントを停止します。各CLIのアカウントからのサインアウトやアンインストールは行いません。</p>
+    </section>
+    <section id="support">
+      <h2>不具合の報告</h2>
+      <p>バージョン、macOSのバージョン、Macの種類、再現手順、表示されたエラーを確認してください。<a href="https://github.com/bizen/bizencore-os/issues" target="_blank" rel="noopener noreferrer">GitHubのIssues</a>から報告できます。</p>
+      <p class="warning">Issuesは公開の場です。認証トークン、秘密鍵、メールアドレス、個人のタスク・会話、ローカルパスを含むスクリーンショットやログをそのまま投稿しないでください。</p>
+      <p class="meta">同梱ライブラリの表記は配布物の<code>THIRD_PARTY_NOTICES.txt</code>を確認してください。画像素材などの配布条件の確認も、公開前の確認項目です。</p>
+    </section>
+  </main>
+  <footer><span>© 2026 bizencore</span><a href="../">bizencore.com</a><a href="https://app.bizencore.com/">Web版を開く</a></footer>
+  <script src="download.js"></script>
+</body>
+</html>
