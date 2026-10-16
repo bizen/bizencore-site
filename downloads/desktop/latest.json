@@ -2,7 +2,19 @@
   "channel": "production",
   "platform": "darwin",
   "arch": "arm64",
-  "published": false,
+  "version": "0.1.17",
+  "published": true,
   "updateMethod": "manual",
-  "pageUrl": "https://bizencore.com/downloads/"
+  "pageUrl": "https://bizencore.com/downloads/",
+  "minimumMacOs": "13.0",
+  "builtAt": "2026-10-16T10:36:50.556Z",
+  "sourceCommit": "d93b3df796ddf085d1bc4457e0f31692b6609f0a",
+  "adHocSigned": true,
+  "developerIdSigned": false,
+  "notarized": false,
+  "size": 147016072,
+  "sha256": "d8f979e655e2f55777ba832372f98cff97903b232969861e4cc58f5fecdec422",
+  "downloadUrl": "https://github.com/bizen/bizencore-os/releases/download/desktop-v0.1.17/bizencore-terminal-0.1.17-darwin-arm64.zip",
+  "checksumUrl": "https://github.com/bizen/bizencore-os/releases/download/desktop-v0.1.17/SHA256SUMS",
+  "notesUrl": "https://github.com/bizen/bizencore-os/releases/tag/desktop-v0.1.17"
 }

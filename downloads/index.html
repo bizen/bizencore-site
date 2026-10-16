@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <meta name="description" content="bizencore terminal デスクトップ版のダウンロード、インストールと手動更新の案内。">
-  <title>Desktop downloads | bizencore</title>
+  <title>Desktop beta | bizencore</title>
   <link rel="icon" href="favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -53,15 +53,16 @@
   <main>
     <section aria-labelledby="title">
       <h1 id="title">bizencore terminal<sup>2</sup></h1>
-      <p class="meta">Desktop / macOS 13以降 / Apple Silicon（M1以降）</p>
+      <p class="meta">Desktop β / macOS 13以降 / Apple Silicon（M1以降）</p>
       <div class="download-row">
         <a id="download" class="download" aria-disabled="true" role="link">
           <span id="download-label">公開準備中</span>
         </a>
-        <span class="meta" id="release-status" role="status">実機確認が終わるまで、ダウンロードは提供しません。</span>
+        <span class="meta" id="release-status" role="status">公開バージョンを確認しています。取得できない場合は、時間をおいて再読み込みしてください。</span>
       </div>
       <p class="warning">このアプリはAppleのDeveloper ID署名・公証を受けていません。Appleによる安全性確認はなく、macOSが起動をブロックする場合があります。</p>
       <p class="meta">Intel Mac、Windows、Linuxは現在の配布対象ではありません。サインインが必要です。Claude Code / Codexはご自身でインストール・認証してください。</p>
+      <p class="meta">β版です。重要な作業にはバックアップを用意し、エージェントに許可する操作と対象フォルダを確認してください。</p>
       <div class="release-detail" id="release-detail" hidden><span id="release-version"></span><br><a id="checksums">SHA256SUMS</a> · <a id="release-notes">変更履歴と配布ファイル</a><code class="checksum" id="checksum"></code></div>
       <figure><img src="desktop-screen.png" width="1380" height="900" alt="タスクリスト、中央の詳細パネル、エージェント起動フォームを並べたデスクトップ画面"><figcaption>テストデータによるデスクトップ画面。個人のタスクは含まれていません。</figcaption></figure>
     </section>
@@ -94,11 +95,16 @@
       <p>更新確認では、公式の公開バージョン情報だけを取得します。アカウントの認証トークン、タスク、フォルダ、会話を更新サーバーへ送る設計ではありません。表示用フォントや認証SDKなどには外部サービスへの通信があります。</p>
       <p class="meta">サインアウトするとbizencoreの画面をロックし、このアプリが起動したエージェントを停止します。各CLIのアカウントからのサインアウトやアンインストールは行いません。</p>
     </section>
+    <section id="limitations">
+      <h2>β版の確認範囲</h2>
+      <p>開発に使用したApple Silicon Macで、ログイン復元、両CLIでの作業・進捗同期、手動更新、未導入CLIの案内、フォルダ権限不足の表示を確認しています。すべてのMac・macOSでの動作を保証するものではありません。</p>
+      <p class="meta">別Mac・別アカウントでの実機試験、認証失効までの正確な時間測定、失効後に古いMCP接続を再送する実機試験は未実施です。本人セッションを失効した際の画面遮断・CLI停止と、再ログインによる復帰は確認済みです。</p>
+    </section>
     <section id="support">
       <h2>不具合の報告</h2>
       <p>バージョン、macOSのバージョン、Macの種類、再現手順、表示されたエラーを確認してください。<a href="https://github.com/bizen/bizencore-os/issues" target="_blank" rel="noopener noreferrer">GitHubのIssues</a>から報告できます。</p>
       <p class="warning">Issuesは公開の場です。認証トークン、秘密鍵、メールアドレス、個人のタスク・会話、ローカルパスを含むスクリーンショットやログをそのまま投稿しないでください。</p>
-      <p class="meta">同梱ライブラリの表記は配布物の<code>THIRD_PARTY_NOTICES.txt</code>を確認してください。画像素材などの配布条件の確認も、公開前の確認項目です。</p>
+      <p class="meta">同梱ライブラリの表記は配布物の<code>THIRD_PARTY_NOTICES.txt</code>を確認してください。OpenAI / Codex、Claude / Claude Codeの名称・識別画像は各権利者に帰属し、提携・推奨を意味しません。</p>
     </section>
   </main>
   <footer><span>© 2026 bizencore</span><a href="../">bizencore.com</a><a href="https://app.bizencore.com/">Web版を開く</a></footer>

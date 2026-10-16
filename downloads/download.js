@@ -42,7 +42,7 @@
     download.href = release.downloadUrl;
     download.setAttribute('aria-disabled', 'false');
     document.getElementById('download-label').textContent = 'macOS版をダウンロード';
-    document.getElementById('release-status').textContent = `v${release.version} · ${(release.size / 1_000_000).toFixed(1)} MB · Apple Silicon`;
+    document.getElementById('release-status').textContent = `v${release.version} β · ${(release.size / 1_000_000).toFixed(1)} MB · Apple Silicon`;
     document.getElementById('release-detail').hidden = false;
     document.getElementById('release-version').textContent = `v${release.version} / 手動更新 / Apple未公証`;
     document.getElementById('checksums').href = release.checksumUrl;

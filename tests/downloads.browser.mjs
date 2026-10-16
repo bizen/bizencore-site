@@ -22,10 +22,12 @@ try {
   const page = await browser.newPage();
   const missing = [];
   page.on('response', response => { if (response.url().startsWith(base) && response.status() >= 400) missing.push(response.url()); });
+  await page.route('**/downloads/desktop/latest.json', route => route.fulfill({ json: { published: false } }));
   await page.goto(`${base}/downloads/`);
   await page.waitForFunction(() => document.querySelector('figure img').complete && document.querySelector('figure img').naturalWidth > 0);
   assert.equal(await page.locator('#download').getAttribute('aria-disabled'), 'true');
   assert.equal(await page.locator('#download').getAttribute('href'), null);
+  await page.unroute('**/downloads/desktop/latest.json');
   const release = { version: '0.1.8', channel: 'production', platform: 'darwin', arch: 'arm64', published: true,
     adHocSigned: true, developerIdSigned: false, notarized: false, updateMethod: 'manual',
     sha256: 'a'.repeat(64), sourceCommit: 'b'.repeat(40), size: 145_000_000,
@@ -52,9 +54,19 @@ try {
     assert.equal(await page.locator('#download').getAttribute('href'), null);
   }
   await page.unroute('**/downloads/desktop/latest.json');
+  const actual = JSON.parse(await readFile(path.join(root, 'downloads/desktop/latest.json'), 'utf8'));
+  if (actual.published === true) {
+    await page.reload();
+    await page.waitForFunction(() => document.querySelector('#download').getAttribute('aria-disabled') === 'false');
+    assert.equal(await page.locator('#download').getAttribute('href'), actual.downloadUrl);
+    assert.ok((await page.locator('#release-status').innerText()).includes(actual.version));
+    assert.ok((await page.locator('#checksum').innerText()).includes(actual.sha256));
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.screenshot({ path: '/private/tmp/bizencore-beta-download-page-1440.png' });
+  }
   await page.route('**/downloads/desktop/latest.json', route => route.fulfill({ status: 404 }));
   await page.reload();
   assert.equal(await page.locator('#download').getAttribute('aria-disabled'), 'true');
   assert.deepEqual(missing.filter(url => !url.endsWith('latest.json')), []);
-  console.log('Download page: unpublished/invalid feeds fail closed; published metadata, assets and 1440/390/320 layouts verified. No release was uploaded.');
+  console.log('Download page: unpublished/invalid feeds fail closed; published metadata, assets and 1440/390/320 layouts verified.');
 } finally { await browser.close(); await new Promise(resolve => server.close(resolve)); }
