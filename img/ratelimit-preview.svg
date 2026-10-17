@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <title>ratelimit.world — illustrative dashboard with sample data</title>
+  <rect width="1600" height="1000" fill="#f7f5ff"/>
+  <g font-family="Arial, sans-serif" fill="#1d1b3a">
+    <text x="72" y="104" font-size="48" font-weight="900" letter-spacing="-2">ratelimit<tspan fill="#5b4bff">.world</tspan></text>
+    <text x="72" y="138" font-size="18" fill="#6e6a8e">by bizencore</text>
+    <text x="1528" y="106" text-anchor="end" font-size="19" fill="#6e6a8e">SAMPLE DASHBOARD</text>
+    <g fill="#fff" stroke="#e3def7" stroke-width="3">
+      <rect x="72" y="190" width="462" height="190" rx="26"/>
+      <rect x="569" y="190" width="462" height="190" rx="26"/>
+      <rect x="1066" y="190" width="462" height="190" rx="26"/>
+      <rect x="72" y="418" width="956" height="510" rx="26"/>
+      <rect x="1066" y="418" width="462" height="510" rx="26"/>
+    </g>
+    <text x="108" y="286" font-size="76" font-weight="900" fill="#ff7a1a">6</text>
+    <text x="108" y="337" font-size="25" fill="#6e6a8e">day streak</text>
+    <text x="605" y="286" font-size="76" font-weight="900" fill="#5b4bff">2,000</text>
+    <text x="605" y="337" font-size="25" fill="#6e6a8e">XP this week</text>
+    <text x="1102" y="286" font-size="76" font-weight="900" fill="#36b9e8">1</text>
+    <text x="1102" y="337" font-size="25" fill="#6e6a8e">streak freeze</text>
+    <text x="108" y="487" font-size="34" font-weight="900">Today's windows</text>
+    <text x="990" y="486" text-anchor="end" font-size="30" font-weight="900" fill="#5b4bff">+370 XP</text>
+    <path d="M108 522H990" stroke="#e3def7" stroke-width="3"/>
+    <text x="108" y="576" font-size="25" font-weight="700">Daily goal reached</text>
+    <text x="990" y="576" text-anchor="end" font-size="25" fill="#5b4bff">2 / 1</text>
+    <rect x="108" y="604" width="882" height="16" rx="8" fill="#5b4bff"/>
+    <rect x="108" y="657" width="258" height="185" rx="22" fill="#d97857"/>
+    <rect x="393" y="657" width="258" height="185" rx="22" fill="#1d1b3a"/>
+    <rect x="678" y="657" width="312" height="185" rx="22" fill="#e9e6ff"/>
+    <g font-weight="900" font-size="52" fill="#fff"><text x="141" y="728">1</text><text x="426" y="728">2</text></g>
+    <g font-size="24" fill="#fff"><text x="141" y="777">Claude Code</text><text x="426" y="777">Codex</text></g>
+    <text x="710" y="722" font-size="26" font-weight="900" fill="#5b4bff">Next window</text>
+    <text x="710" y="774" font-size="35" font-family="monospace">00:24:18</text>
+    <text x="710" y="813" font-size="20" fill="#6e6a8e">Notification on reset</text>
+    <text x="108" y="892" font-size="24" fill="#6e6a8e">A new window. A little more momentum.</text>
+    <text x="1102" y="487" font-size="31" font-weight="900">Daily quests</text>
+    <path d="M1102 522H1492" stroke="#e3def7" stroke-width="3"/>
+    <circle cx="1117" cy="579" r="13" fill="#16b364"/>
+    <path d="m1111 579 4 5 8-10" fill="none" stroke="#fff" stroke-width="3"/>
+    <text x="1147" y="587" font-size="22">Hit your daily goal</text>
+    <text x="1147" y="621" font-size="20" fill="#ff7a1a">+50 XP</text>
+    <circle cx="1117" cy="688" r="13" fill="none" stroke="#e3def7" stroke-width="3"/>
+    <text x="1147" y="684" font-size="22">Restart within 5 min,</text>
+    <text x="1147" y="716" font-size="22">twice</text>
+    <text x="1147" y="751" font-size="20" fill="#6e6a8e">1 / 2</text>
+    <rect x="1102" y="806" width="390" height="79" rx="16" fill="#e9e6ff"/>
+    <text x="1124" y="854" font-size="22" fill="#5b4bff">Keep the streak alive.</text>
+  </g>
+</svg>

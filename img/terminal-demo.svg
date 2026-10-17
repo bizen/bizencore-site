@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<title>bizencore terminal — demo tasks</title>
+<desc>A fictional task list following the actual terminal layout. No personal task data.</desc>
+<style>text{font-family:Arial,'Hiragino Sans','Noto Sans CJK JP',sans-serif;fill:#c3c6c7;font-size:23px;font-weight:400}.muted{fill:#777d80}.small{font-size:18px}.serif{font-family:'Times New Roman',serif;font-size:29px}.line{stroke:#222729;stroke-width:1.5;fill:none}.check{stroke:#383e41;stroke-width:2;fill:none}</style>
+<rect width="1600" height="1000" fill="#090b0c"/>
+<text x="28" y="49" class="serif">bizen<tspan font-style="italic">core</tspan> terminal</text>
+<path d="M0 86H1600" class="line"/>
+<text x="1265" y="48" font-size="20">tasks</text><path d="M1258 60H1321" stroke="#90a9c0" stroke-width="2"/>
+<text x="1372" y="48" class="muted" font-size="20">count</text>
+<g class="line"><path d="M1456 31H1477M1456 42H1477"/><circle cx="1462" cy="31" r="3" fill="#090b0c"/><circle cx="1471" cy="42" r="3" fill="#090b0c"/><rect x="1510" y="24" width="65" height="36" rx="9"/></g><text x="1525" y="48" class="small muted">sync</text>
+<rect x="372" y="126" width="218" height="43" rx="10" fill="#0d1012" stroke="#252b2e"/>
+<rect x="376" y="130" width="47" height="35" rx="7" fill="#20282e"/>
+<text x="389" y="154" class="small">all</text><text x="438" y="154" class="small muted">board</text><text x="510" y="154" class="small muted">today</text>
+<circle cx="566" cy="147" r="10" fill="#202528"/><text x="562" y="152" style="font-size:13px" class="muted">3</text>
+<path d="M372 180H1260" class="line"/>
+<rect x="1168" y="128" width="38" height="38" rx="10" fill="none" stroke="#292f32"/>
+<circle cx="1185" cy="144" r="7" class="check"/><path d="m1190 149 6 6" class="check"/>
+<rect x="1222" y="128" width="38" height="38" rx="10" fill="none" stroke="#292f32"/><text x="1235" y="155" class="muted">?</text>
+
+<rect x="92" y="209" width="178" height="33" rx="6" fill="#171b1e"/>
+<circle cx="104" cy="225" r="3" fill="#84a9d5"/>
+<text x="116" y="232" class="small" style="fill:#84a9d5">制作</text>
+<circle cx="104" cy="263" r="3" fill="#b8a16b"/>
+<text x="116" y="270" class="small" style="fill:#979da0">暮らし</text>
+<circle cx="104" cy="301" r="3" fill="#85ad91"/>
+<text x="116" y="308" class="small" style="fill:#979da0">アイデア</text>
+<path d="M499 218v14" stroke="#84a9d5" stroke-width="3"/>
+<circle cx="532" cy="226" r="7" fill="#84a9d5"/>
+<text x="550" y="233" class="" style="fill:#84a9d5">制作</text>
+<circle cx="1260" cy="224" r="8" fill="#84a9d5"/>
+<text x="1288" y="232" class="muted">+</text>
+<path d="M500 251V595" class="line"/>
+<rect x="515" y="262" width="21" height="21" rx="6" class="check"/>
+<text x="554" y="279" class="" style="fill:#c3c6c7">新しいアイデアを形にする</text>
+<circle cx="1188" cy="272" r="3" fill="#84a9d5"/>
+<path d="m1311 269 -8 9a4 4 0 0 1-6-6l9-9a3 3 0 0 1 4 4l-8 8" class="check"/>
+<text x="1318" y="277" class="small muted">2</text>
+<path d="M528 291v46" class="line"/>
+<rect x="543" y="313" width="21" height="21" rx="6" class="check" style="stroke:#90a9c0;fill:#1a232b"/>
+<path d="m548 323 4 4 8-9" fill="none" stroke="#90a9c0" stroke-width="2"/>
+<text x="582" y="330" class="" style="fill:#7d858a">方向性を整理する</text>
+<path d="M528 342v46" class="line"/>
+<rect x="543" y="364" width="21" height="21" rx="6" class="check"/>
+<text x="582" y="381" class="" style="fill:#c3c6c7">最初のプロトタイプを作る</text>
+<circle cx="1188" cy="374" r="3" fill="#84a9d5"/>
+<path d="m1311 371 -8 9a4 4 0 0 1-6-6l9-9a3 3 0 0 1 4 4l-8 8" class="check"/>
+<text x="1318" y="379" class="small muted">1</text>
+<path d="M556 393v46" class="line"/>
+<rect x="571" y="415" width="21" height="21" rx="6" class="check"/>
+<text x="610" y="432" class="" style="fill:#c3c6c7">細部を調整する</text>
+<rect x="515" y="466" width="21" height="21" rx="6" class="check"/>
+<text x="554" y="483" class="" style="fill:#c3c6c7">公開の準備</text>
+<path d="M528 495v46" class="line"/>
+<rect x="543" y="517" width="21" height="21" rx="6" class="check"/>
+<text x="582" y="534" class="" style="fill:#c3c6c7">紹介文を書く</text>
+<path d="M528 546v46" class="line"/>
+<rect x="543" y="568" width="21" height="21" rx="6" class="check"/>
+<text x="582" y="585" class="" style="fill:#c3c6c7">仕上がりを確認する</text>
+<path d="m1311 575 -8 9a4 4 0 0 1-6-6l9-9a3 3 0 0 1 4 4l-8 8" class="check"/>
+<text x="1318" y="583" class="small muted">1</text>
+<path d="M498 615H1334" class="line"/>
+<path d="M499 643v14" stroke="#b8a16b" stroke-width="3"/>
+<circle cx="532" cy="651" r="7" fill="#b8a16b"/>
+<text x="550" y="658" class="" style="fill:#b8a16b">暮らし</text>
+<circle cx="1260" cy="649" r="8" fill="#b8a16b"/>
+<text x="1288" y="657" class="muted">+</text>
+<path d="M500 676V867" class="line"/>
+<rect x="515" y="687" width="21" height="21" rx="6" class="check"/>
+<text x="554" y="704" class="" style="fill:#c3c6c7">週末の予定</text>
+<path d="M528 716v46" class="line"/>
+<rect x="543" y="738" width="21" height="21" rx="6" class="check"/>
+<text x="582" y="755" class="" style="fill:#c3c6c7">散歩に出かける</text>
+<circle cx="1188" cy="748" r="3" fill="#b8a16b"/>
+<path d="M528 767v46" class="line"/>
+<rect x="543" y="789" width="21" height="21" rx="6" class="check"/>
+<text x="582" y="806" class="" style="fill:#c3c6c7">読みたい本を選ぶ</text>
+<path d="m1311 796 -8 9a4 4 0 0 1-6-6l9-9a3 3 0 0 1 4 4l-8 8" class="check"/>
+<text x="1318" y="804" class="small muted">1</text>
+<rect x="515" y="840" width="21" height="21" rx="6" class="check"/>
+<text x="554" y="857" class="" style="fill:#c3c6c7">机のまわりを整える</text>
+<path d="M498 887H1334" class="line"/>
+<text x="499" y="943" class="small muted">10 残り</text>
+<text x="627" y="943" class="small muted">+ ラベル</text>
+<text x="499" y="977" class="small muted">Enter 新しい行     Tab サブタスク     Cmd+Enter 完了     Option+T today</text>
+</svg>

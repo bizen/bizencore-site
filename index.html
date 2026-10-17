@@ -84,15 +84,14 @@
     display: grid; grid-template-columns: 1fr auto 1fr; align-items: start; gap: 16px; color: #fff; mix-blend-mode: difference; font-size: 13px; }
   header.bar { pointer-events: none; }
   header.bar a { pointer-events: auto; }
-  header.bar .logo { font-weight: 500; letter-spacing: -.01em; font-size: 15px; }
-  header.bar .logo i { font-family: var(--serif); font-weight: 400; font-size: 17px; }
+  header.bar .logo { font-family: var(--serif); font-weight: 400; letter-spacing: -.01em; font-size: 17px; }
   header.bar .mid { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; opacity: .8; text-align: center; }
-  header.bar nav { justify-self: end; display: flex; gap: 22px; align-items: baseline; }
+  header.bar nav { justify-self: end; display: flex; gap: clamp(8px, 2vw, 22px); align-items: baseline; }
   header.bar nav a { position: relative; }
   header.bar nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .5s cubic-bezier(.7,0,.2,1); }
   header.bar nav a:hover::after, header.bar nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
   header.bar .clock { font-family: var(--mono); font-size: 11px; opacity: .8; font-variant-numeric: tabular-nums; }
-  @media (max-width: 760px) { header.bar .mid, header.bar .clock { display: none; } header.bar { grid-template-columns: 1fr auto; } }
+  @media (max-width: 760px) { header.bar .mid, header.bar .clock { display: none; } header.bar { grid-template-columns: 1fr auto; } header.bar nav { font-size: 12px; } }
 
   main { position: relative; z-index: 10; }
   section { position: relative; }
@@ -112,7 +111,8 @@
   .wordmark { font-family: var(--serif); font-weight: 400; line-height: .74; letter-spacing: -.035em; font-size: 25.2vw; white-space: nowrap; margin: 0 0 -1.4vw -.6vw; color: var(--ink); display: flex; }
   .wordmark .l { display: inline-block; overflow: hidden; padding: 0 .01em .09em; margin-bottom: -.09em; }
   .wordmark .l span { display: inline-block; will-change: transform; }
-  .wordmark em { font-style: italic; }
+  .loader .word, header.bar .logo, .wordmark, .foot .big { font-style: normal; }
+  .loader .word i, header.bar .logo i, .wordmark em, .foot .big em { font-style: italic; }
   @media (max-width: 760px) { .hero .meta { grid-template-columns: 1fr 1fr; } .hero .meta .hide-m { display: none; } }
 
   /* ---------- 宣言 ---------- */
@@ -129,13 +129,13 @@
   .works { position: relative; }
   .works .stop { height: 115vh; }
   .works .sticky { position: sticky; top: 0; height: 100svh; margin-bottom: -100svh; padding: 0 var(--gutter); pointer-events: none; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); z-index: 2; }
-  .cap { align-self: end; padding-bottom: 7vh; display: grid; gap: 18px; max-width: 560px; }
+  .cap { align-self: end; padding-bottom: 7vh; display: grid; gap: 18px; min-width: 0; max-width: 560px; }
   .cap .num { display: flex; gap: 14px; align-items: baseline; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; }
   .cap .num b { font-weight: 500; }
   .cap .num span { color: var(--ink-2); }
   .cap .num .hint { margin-left: auto; padding-left: 18px; color: var(--code); opacity: .85; }
-  .cap .title { font-family: var(--serif); font-size: clamp(48px, 6.6vw, 120px); line-height: .86; letter-spacing: -.03em; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; height: 1em; position: relative; }
-  .cap .title span { display: block; position: absolute; left: 0; top: 0; white-space: nowrap; }
+  .cap .title { font-family: var(--serif); font-size: clamp(48px, 6.6vw, 120px); line-height: 1.05; letter-spacing: -.03em; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; height: 1.13em; position: relative; }
+  .cap .title > span { display: block; position: absolute; left: 0; top: 0; width: max-content; padding-right: .15em; white-space: nowrap; }
   .cap .title em { font-style: italic; color: var(--code); }
   .cap .desc { font-size: 15px; line-height: 1.55; max-width: 44ch; min-height: 4.65em; }
   .cap .feats { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 6px; font-size: 13px; }
@@ -146,10 +146,15 @@
   .cap dt { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
   .cap dd { margin: 0; grid-row: 2; }
   .cap .go { justify-self: start; display: inline-flex; align-items: center; gap: 12px; padding: 12px 20px 12px 22px; border-radius: 999px; background: var(--ink); color: #0e1010; font-size: 13px; transition: transform .5s cubic-bezier(.7,0,.2,1), opacity .3s; }
+  .cap .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .cap .go.secondary { background: transparent; color: var(--ink); border: 1px solid rgba(233,231,225,.35); }
+  .cap .platform { margin: -8px 0 0; color: var(--ink-2); font-size: 11px; }
+  .cap .platform[hidden], .cap .go[hidden] { display: none; }
+  .cap .go:focus-visible, .profile .lists a:focus-visible { outline: 2px solid var(--code); outline-offset: 4px; }
   .cap .go:hover { transform: translateX(6px); }
   .cap .go[aria-disabled="true"] { background: transparent; color: var(--ink); border: 1px solid rgba(233,231,225,.3); pointer-events: none; }
   .ticks { position: absolute; right: var(--gutter); top: 50%; transform: translateY(-50%); display: grid; gap: 14px; justify-items: end; font-family: var(--mono); font-size: 11px; }
-  .ticks button { all: unset; cursor: pointer; display: flex; gap: 10px; align-items: center; color: var(--ink-2); transition: color .3s; }
+  .ticks button { all: unset; pointer-events: auto; cursor: pointer; display: flex; min-height: 44px; gap: 10px; align-items: center; color: var(--ink-2); transition: color .3s; }
   .ticks button i { display: block; height: 1px; width: 18px; background: currentColor; transition: width .5s cubic-bezier(.7,0,.2,1); }
   .ticks button.on { color: var(--ink); }
   .ticks button.on i { width: 48px; }
@@ -193,9 +198,8 @@
   .foot .links a { display: inline-flex; gap: 10px; align-items: center; padding: 12px 20px; border-radius: 999px; border: 1px solid rgba(236,235,230,.3); font-size: 13px; transition: background .4s, color .4s; }
   .foot .links a:hover, .foot .links a:focus-visible { background: var(--paper); color: var(--ink); outline: none; }
   .foot .big { font-family: var(--serif); font-size: 25.2vw; line-height: .74; letter-spacing: -.035em; white-space: nowrap; margin: 0 0 0 -.6vw; color: var(--paper); opacity: .92; }
-  .foot .big em { font-style: italic; }
   .foot .base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 24px; padding: 14px 0 calc(18px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid rgba(236,235,230,.18); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--paper-2); }
-  .foot .base button { all: unset; cursor: pointer; }
+  .foot .base button { all: unset; pointer-events: auto; cursor: pointer; }
   .foot .base button:focus-visible { outline: 1px solid var(--paper); }
 
   /* ---------- カーソル ---------- */
@@ -264,6 +268,7 @@
   <div class="mid">The Orchestrator — Vol. 01</div>
   <nav>
     <a href="#works">Works</a>
+    <a href="https://bizencore.com/downloads/">Downloads</a>
     <a href="#profile">Profile</a>
     <a href="#contact">Contact</a>
     <span class="clock" id="clock">00:00:00</span>
@@ -322,14 +327,18 @@
   <section class="scene works-scene" data-scene="works">
     <div class="cap" id="cap">
       <div class="num"><b id="capNum">01</b><span>/ 02</span><span id="capKind">Instrument 01</span><span class="hint" id="capHint">Hover the panel to look inside</span></div>
-      <div class="title" id="capTitle"><span>bizencore <em>OS</em></span></div>
-      <p class="desc" id="capDesc"></p>
+      <div class="title" id="capTitle"><span>bizencore <em>terminal</em></span></div>
+      <div class="desc" id="capDesc"></div>
       <dl>
         <dt>Year</dt><dd id="capYear">2026</dd>
         <dt>Status</dt><dd id="capStatus">Live</dd>
         <dt>Stack</dt><dd id="capStack">React, Convex</dd>
       </dl>
-      <a class="go" id="capGo" href="https://app.bizencore.com/" target="_blank" rel="noopener">Open app.bizencore.com <span aria-hidden="true">↗</span></a>
+      <div class="actions">
+        <a class="go" id="capGo" href="https://bizencore.com/downloads/" target="_blank" rel="noopener">Get Desktop β <span aria-hidden="true">↗</span></a>
+        <a class="go secondary" id="capSecondary" href="https://app.bizencore.com/" target="_blank" rel="noopener">Open web app <span aria-hidden="true">↗</span></a>
+      </div>
+      <p class="platform" id="capPlatform">Desktop β · macOS 13+ · Apple Silicon</p>
     </div>
     <div class="ticks" id="ticks"></div>
   </section>
@@ -347,7 +356,7 @@
       <p class="jp">設計から実装、運用まで、ひとりで手がける。道具と AI をつなぎ、一日がひとりでに回るように組み立てる。</p>
     </div>
     <div class="lists">
-      <div><h4>Instruments</h4><ul><li>bizencore OS<span>live</span></li><li>Next instrument<span>fitting</span></li></ul></div>
+      <div><h4>Instruments</h4><ul><li><a href="https://bizencore.com/downloads/">bizencore terminal</a><span>desktop β / web</span></li><li><a href="https://ratelimit.world/" target="_blank" rel="noopener">ratelimit.world</a><span>live</span></li></ul></div>
       <div><h4>Tools</h4><ul><li>TypeScript, React<span>web</span></li><li>Convex, Vercel<span>backend</span></li><li>Claude, MCP<span>ai</span></li></ul></div>
     </div>
   </section>
@@ -356,9 +365,10 @@
     <div class="cta">
       <h3>Let's orchestrate<br>something <em>quiet.</em></h3>
       <div class="links">
+        <a href="https://bizencore.com/downloads/">Desktop β <span aria-hidden="true">↗</span></a>
+        <a href="https://ratelimit.world/" target="_blank" rel="noopener">ratelimit.world <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/bizen" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
         <a href="https://app.bizencore.com/" target="_blank" rel="noopener">app.bizencore.com <span aria-hidden="true">↗</span></a>
-        <a href="/downloads/">Desktop downloads <span aria-hidden="true">↗</span></a>
       </div>
     </div>
     <div class="big" aria-hidden="true">bizen<em>core</em></div>
@@ -400,16 +410,18 @@ gsap.registerPlugin(window.ScrollTrigger);
 
 /* ================= 作品 ================= */
 const WORKS = [
-  { title: 'bizencore <em>OS</em>', kind: 'Instrument 01', year: '2026', status: 'Live', stack: 'React, Convex, MCP',
-    desc: 'A task list that runs in parallel with your agents. You and Claude work the same list at the same time, and neither side ever overwrites the other.',
-    feats: ['Run it entirely from the keyboard', 'Claude and ChatGPT add and update tasks through MCP', 'Every edit syncs across devices, field by field', 'A character counter, Count, built in'],
-    jp: 'エージェントと並列で動くタスクリスト。あなたと AI が同じリストを同時に動かしても、どちらの変更も消えない。',
-    href: 'https://app.bizencore.com/', cta: 'Open app.bizencore.com' },
-  { title: 'Next <em>instrument</em>', kind: 'Empty ring', year: '2026', status: 'Fitting', stack: '—',
-    desc: 'The next ring is being fitted into the machine. It will turn in time with the rest.',
-    feats: [],
-    jp: '次の輪を、いま天球儀に組み込んでいる。',
-    href: '', cta: 'Not yet' },
+  { title: 'bizencore <em>terminal</em>', kind: 'Instrument 01', year: '2026', status: 'Web live / Desktop β', stack: 'React, Convex, MCP',
+    desc: 'Your tasks and coding agents, in one place. Work in the browser, or bring Claude Code and Codex into your workspace with the desktop beta.',
+    feats: ['Desktop beta for Apple Silicon Macs', 'Claude Code and Codex beside your task list', 'Tasks and context synced across devices'],
+    jp: 'タスクとエージェントを、ひとつの作業場に。Web版に加え、Claude Code・Codexと作業できるデスクトップβ版を公開中。',
+    href: 'https://bizencore.com/downloads/', cta: 'Get Desktop β',
+    secondary: { href: 'https://app.bizencore.com/', cta: 'Open web app' },
+    platform: 'Desktop β · macOS 13+ · Apple Silicon' },
+  { title: 'ratelimit<em>.world</em>', kind: 'Instrument 02', year: '2026', status: 'Live', stack: 'Cloudflare Workers, D1, Web Push',
+    desc: 'Catch the next reset. Get notified when Claude Code or Codex is ready again, and turn each new window into streaks, XP, and daily goals.',
+    feats: ['Reset notifications on your phone', 'Daily quests, streaks, and weekly leagues', 'CLI integration for Claude Code and Codex'],
+    jp: 'Claude Code・Codexのリセットをスマホへ通知。ストリークやデイリークエストで、次の作業への再開を習慣に。',
+    href: 'https://ratelimit.world/', cta: 'Open ratelimit.world' },
 ];
 
 /* ================= 時計 ================= */
@@ -500,18 +512,31 @@ addEventListener('pointermove', e => {
 
 /* ================= 作品の見出し ================= */
 const capTitle = document.getElementById('capTitle');
+function fitCapTitle() {
+  capTitle.style.removeProperty('font-size');
+  const fontSize = parseFloat(getComputedStyle(capTitle).fontSize);
+  const available = capTitle.clientWidth;
+  const width = Math.max(0, ...[...capTitle.children].map(s => s.getBoundingClientRect().width));
+  if (available > 0 && width > available) {
+    capTitle.style.fontSize = `${Math.floor(fontSize * available / width * 100) / 100}px`;
+  }
+}
+addEventListener('resize', fitCapTitle);
+document.fonts.ready.then(fitCapTitle);
+document.fonts.addEventListener('loadingdone', fitCapTitle);
 const capEls = {
   num: document.getElementById('capNum'), kind: document.getElementById('capKind'),
   desc: document.getElementById('capDesc'), year: document.getElementById('capYear'),
   status: document.getElementById('capStatus'), stack: document.getElementById('capStack'),
-  go: document.getElementById('capGo'),
+  go: document.getElementById('capGo'), secondary: document.getElementById('capSecondary'),
+  platform: document.getElementById('capPlatform'),
 };
 const ticks = document.getElementById('ticks');
 WORKS.forEach((w, i) => {
   const b = document.createElement('button');
   b.type = 'button';
   b.innerHTML = `${String(i + 1).padStart(2, '0')}<i></i>`;
-  b.setAttribute('aria-label', `Go to work ${i + 1}`);
+  b.setAttribute('aria-label', `Go to ${w.title.replace(/<[^>]*>/g, '')}`);
   b.addEventListener('click', () => {
     const el = document.querySelector(`[data-k="w${i}"]`);
     scrollToY(yOf(el));
@@ -531,19 +556,24 @@ function setWork(i, instant) {
   if (instant || reduced) { capTitle.querySelectorAll('span').forEach(s => s !== nu && s.remove()); }
   else {
     gsap.fromTo(nu, { yPercent: 110 * dir }, { yPercent: 0, duration: 1, ease: 'expo.out' });
-    if (old) gsap.to(old, { yPercent: -110 * dir, duration: 1, ease: 'expo.out', onComplete: () => old.remove() });
+    if (old) gsap.to(old, { yPercent: -110 * dir, duration: 1, ease: 'expo.out', onComplete: () => { old.remove(); fitCapTitle(); } });
   }
+  fitCapTitle();
   capEls.num.textContent = String(i + 1).padStart(2, '0');
   capEls.kind.textContent = w.kind;
   capEls.desc.innerHTML = `${w.desc}${w.feats.length ? `<ul class="feats">${w.feats.map(f => `<li>${f}</li>`).join('')}</ul>` : ''}<small>${w.jp}</small>`;
   capEls.year.textContent = w.year;
   capEls.status.textContent = w.status;
   capEls.stack.textContent = w.stack;
+  capEls.secondary.hidden = !w.secondary;
+  if (w.secondary) { capEls.secondary.href = w.secondary.href; capEls.secondary.textContent = `${w.secondary.cta} ↗`; }
+  capEls.platform.hidden = !w.platform;
+  capEls.platform.textContent = w.platform || '';
   capEls.go.innerHTML = `${w.cta} <span aria-hidden="true">${w.href ? '↗' : ''}</span>`;
   if (w.href) { capEls.go.href = w.href; capEls.go.removeAttribute('aria-disabled'); capEls.go.tabIndex = 0; }
   else { capEls.go.removeAttribute('href'); capEls.go.setAttribute('aria-disabled', 'true'); capEls.go.tabIndex = -1; }
   if (!instant && !reduced) gsap.fromTo([capEls.desc, capEls.go], { y: 14, opacity: 0.2 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', stagger: 0.06 });
-  [...ticks.children].forEach((b, j) => b.classList.toggle('on', j === i));
+  [...ticks.children].forEach((b, j) => { b.classList.toggle('on', j === i); b.setAttribute('aria-pressed', String(j === i)); });
 }
 setWork(0, true);
 if (coarse) document.getElementById('capHint').textContent = 'Tap the panel to look inside';
@@ -759,69 +789,42 @@ machine.add(helix);
 
 /* ---------- 作品パネル ---------- */
 function makeCanvas() { const c = document.createElement('canvas'); c.width = 1600; c.height = 1000; return [c, c.getContext('2d')]; }
-function kbd(ctx, x, y, key, label, fg, line) {
-  ctx.font = '500 30px "Geist Mono", monospace';
-  const w = ctx.measureText(key).width + 36;
-  ctx.strokeStyle = line; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.roundRect(x, y, w, 56, 10); ctx.stroke();
-  ctx.fillStyle = fg; ctx.fillText(key, x + 18, y + 38);
-  ctx.font = '400 28px "Geist", "Zen Kaku Gothic New", sans-serif';
-  ctx.fillStyle = line; ctx.fillText(label, x + w + 14, y + 38);
-  return x + w + 14 + ctx.measureText(label).width + 40;
-}
+const terminalVisual = new Image();
+const terminalVisualReady = new Promise(resolve => {
+  terminalVisual.onload = () => resolve(true);
+  terminalVisual.onerror = () => resolve(false);
+});
+terminalVisual.src = 'img/terminal-preview.png';
+const rateVisual = new Image();
+const rateVisualReady = new Promise(resolve => {
+  rateVisual.onload = () => resolve(true);
+  rateVisual.onerror = () => resolve(false);
+});
+rateVisual.src = 'img/ratelimit-preview.svg';
 const DRAW = [
-  // 01 bizencore OS：あなたと Claude と ChatGPT が、同じリストを同時に動かしている
+  // terminal の特徴を残した、紹介用の架空の画面。
   ctx => {
-    ctx.fillStyle = '#121620'; ctx.fillRect(0, 0, 1600, 1000);
-    ctx.fillStyle = '#e2e8f0'; ctx.font = '500 36px "Geist", sans-serif'; ctx.fillText('bizencore OS', 90, 100);
-    [['you', '#e2e8f0'], ['Claude', '#5fd9e8'], ['ChatGPT', '#9fb7d6']].forEach(([n, c], k) => {
-      const x = 1010 + k * 170;
-      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, 88, 9, 0, Math.PI * 2); ctx.fill();
-      ctx.font = '400 26px "Geist Mono", monospace'; ctx.fillStyle = '#94a3b8'; ctx.fillText(n, x + 20, 97);
-    });
-    ctx.fillStyle = '#2d3748'; ctx.fillRect(0, 150, 1600, 2);
-    ctx.fillStyle = '#e2e8f0'; ctx.font = '500 44px "Zen Kaku Gothic New", sans-serif'; ctx.fillText('today', 90, 250);
-    ctx.fillStyle = '#f0b429'; ctx.font = '500 32px "Geist Mono", monospace'; ctx.fillText('5 tasks · 2h40m', 1180, 250);
-    const rows = [
-      ['見積もりを送る', '30m', 1, 0, 'you', '#e2e8f0'],
-      ['LP の配色を決める', '1h', 0, 0, 'you', '#e2e8f0', true],
-      ['請求書を確認', '15m', 0, 0, 'Claude', '#5fd9e8', true],
-      ['金額を照合する', '10m', 0, 1, 'Claude', '#5fd9e8'],
-      ['会議メモからやることを抜き出す', '20m', 0, 0, 'ChatGPT', '#9fb7d6'],
-    ];
-    rows.forEach(([t, e, done, sub, who, wc, editing], i) => {
-      const y = 320 + i * 104, x = 90 + sub * 64;
-      if (done) { ctx.fillStyle = 'rgba(95,217,232,.13)'; ctx.fillRect(60, y - 20, 1480, 90); }
-      ctx.strokeStyle = done ? '#5fd9e8' : '#5b667c'; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.roundRect(x, y + 6, 38, 38, 8); ctx.stroke();
-      if (done) { ctx.fillStyle = '#5fd9e8'; ctx.fill(); }
-      ctx.fillStyle = done ? '#5fd9e8' : '#e2e8f0'; ctx.font = '400 42px "Zen Kaku Gothic New", sans-serif'; ctx.fillText(t, x + 70, y + 40);
-      const tw = ctx.measureText(t).width;
-      if (editing) { ctx.fillStyle = wc; ctx.fillRect(x + 78 + tw, y + 4, 4, 46); }   // いま編集しているカーソル
-      ctx.fillStyle = wc; ctx.beginPath(); ctx.arc(1250, y + 26, 8, 0, Math.PI * 2); ctx.fill();
-      ctx.font = '400 26px "Geist Mono", monospace'; ctx.fillStyle = '#94a3b8'; ctx.fillText(who, 1268, y + 35);
-      ctx.fillText(e, 1450, y + 35);
-      ctx.fillStyle = '#222a3a'; ctx.fillRect(60, y + 78, 1480, 2);
-    });
-    let x = 90; x = kbd(ctx, x, 880, '⌘ Enter', 'done', '#e2e8f0', '#5b667c'); x = kbd(ctx, x, 880, '⌥ T', 'today', '#e2e8f0', '#5b667c'); kbd(ctx, x, 880, 'MCP', 'agents', '#e2e8f0', '#5b667c');
+    ctx.fillStyle = '#090b0c'; ctx.fillRect(0, 0, 1600, 1000);
+    if (terminalVisual.naturalWidth) {
+      const scale = Math.min(1600 / terminalVisual.naturalWidth, 1000 / terminalVisual.naturalHeight);
+      const width = terminalVisual.naturalWidth * scale, height = terminalVisual.naturalHeight * scale;
+      ctx.drawImage(terminalVisual, (1600 - width) / 2, (1000 - height) / 2, width, height);
+    } else {
+      ctx.fillStyle = '#e9e7e1'; ctx.font = '400 60px "Instrument Serif", serif';
+      ctx.fillText('bizencore terminal', 80, 140);
+      ctx.fillStyle = '#a9aca8'; ctx.font = '400 32px "Geist", sans-serif';
+      ctx.fillText('Open app.bizencore.com ↗', 80, 850);
+    }
   },
-  // 04 Next
+  // ratelimit.world：紹介用のサンプル画面。
   ctx => {
-    const g = ctx.createRadialGradient(800, 470, 20, 800, 500, 900);
-    g.addColorStop(0, '#ebe5d6'); g.addColorStop(0.35, '#c9ccc6'); g.addColorStop(1, '#8c9593');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, 1600, 1000);
-    ctx.strokeStyle = 'rgba(20,24,24,.08)'; ctx.lineWidth = 2;
-    for (let x = 0; x <= 1600; x += 100) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 1000); ctx.stroke(); }
-    for (let y = 0; y <= 1000; y += 100) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1600, y); ctx.stroke(); }
-    ctx.fillStyle = '#161919'; ctx.textAlign = 'center';
-    ctx.font = 'italic 400 190px "Instrument Serif", serif'; ctx.fillText('Being fitted', 800, 540);
-    ctx.font = '400 30px "Geist Mono", monospace'; ctx.fillStyle = '#3d4341'; ctx.fillText('NEXT INSTRUMENT  ·  2026  ·  FITTING', 800, 640);
-    ctx.textAlign = 'left';
+    ctx.fillStyle = '#121030'; ctx.fillRect(0, 0, 1600, 1000);
+    if (rateVisual.naturalWidth) ctx.drawImage(rateVisual, 0, 0, 1600, 1000);
   },
 ];
 
 // パネルの面。ふだんは Higgsfield で生成したキービジュアル、カーソルを重ねると霧が溶けるように製品の画面に変わる
-const KV = ['tasks', 'next'];
+const KV = ['img/kv-tasks.jpg', 'img/ratelimit-cover.svg'];
 const kvLoader = new THREE.TextureLoader();
 function makeFaceMat(uiTex, i) {
   const m = new THREE.ShaderMaterial({
@@ -853,7 +856,7 @@ function makeFaceMat(uiTex, i) {
     fog: true,
   });
   m.uniforms.uB.value = uiTex;
-  kvLoader.load(`img/kv-${KV[i]}.jpg`, t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); m.uniforms.uA.value = t; });
+  kvLoader.load(KV[i], t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); m.uniforms.uA.value = t; });
   return m;
 }
 const tapped = [false, false];
@@ -888,6 +891,7 @@ async function drawPanels() {
     await Promise.all(['400 40px "Geist"', '500 40px "Geist"', '400 40px "Geist Mono"', '500 40px "Geist Mono"', '400 40px "Instrument Serif"', 'italic 400 40px "Instrument Serif"', '400 40px "Zen Kaku Gothic New"', '500 40px "Zen Kaku Gothic New"', '400 40px "Zen Old Mincho"']
       .map(f => document.fonts.load(f, 'aあ')));
   } catch (e) { /* 書体が来なくても代わりの書体で描く */ }
+  await Promise.all([terminalVisualReady, rateVisualReady]);
   panels.forEach((p, i) => { DRAW[i](p.userData.canvas.getContext('2d')); p.userData.tex.needsUpdate = true; });
 }
 
@@ -1031,9 +1035,9 @@ const SCRIPT = [
   { a: 'manifesto', b: 'pass', f: 0.5, pos: V(4, 40, -34), look: V(0, 32, -60), wide: 1.3 }, // 高く飛んで頂上へ
   { k: 'pass', pos: V(0, 62, -53.6), look: V(0, 23, -60), wide: 1.55 },                     // 極の輪の真上から見下ろす
   { a: 'pass', b: 'w0', f: 0.5, pos: V(0, 31, -53.6), look: V(0, 23, -60.2) },               // 極の輪を真下へくぐる
-  { k: 'w0', polar: { ang: 90, r: 11.6, y: 23.6 }, facing: true, work: 0 },                // レールに乗って、bizencore OS の前へ
-  { a: 'w0', b: 'w1', f: 0.55, polar: { ang: 97, r: 11.6, y: 23.6 }, facing: true, work: 0 }, // bizencore OS の前で、ゆっくり回り込みながら止まる
-  { k: 'w1', polar: { ang: 150, r: 11.6, y: 23.6 }, facing: true, work: 1 },               // 空いた輪へ回る
+  { k: 'w0', polar: { ang: 90, r: 11.6, y: 23.6 }, facing: true, work: 0 },                // レールに乗って、bizencore terminal の前へ
+  { a: 'w0', b: 'w1', f: 0.55, polar: { ang: 97, r: 11.6, y: 23.6 }, facing: true, work: 0 }, // bizencore terminal の前で、ゆっくり回り込みながら止まる
+  { k: 'w1', polar: { ang: 150, r: 11.6, y: 23.6 }, facing: true, work: 1 },               // ratelimit.world のパネルへ回る
   { a: 'w1', b: 'dusk', f: 0.5, polar: { ang: 270, r: 6, y: 27 }, look: V(0, 40, -60) },   // らせんの軸へ寄って見上げる
   { k: 'dusk', polar: { ang: 380, r: 6, y: 41 }, look: V(0, 56, -60) },                   // 軸に沿って巻きながら上昇
   { k: 'profile', polar: { ang: 490, r: 5.5, y: 54 }, look: V(0, 76, -60) },              // 天球儀の上へ抜ける
