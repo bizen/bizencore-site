@@ -25,6 +25,9 @@ try {
   await page.route('**/downloads/desktop/latest.json', route => route.fulfill({ json: { published: false } }));
   await page.goto(`${base}/downloads/`);
   await page.waitForFunction(() => document.querySelector('figure img').complete && document.querySelector('figure img').naturalWidth > 0);
+  const limitations = await page.locator('#limitations').innerText();
+  assert.ok(limitations.includes('失効後・再ログイン後とも拒否'));
+  assert.ok(limitations.includes('認証失効までの正確な時間測定は未実施'));
   assert.equal(await page.locator('#download').getAttribute('aria-disabled'), 'true');
   assert.equal(await page.locator('#download').getAttribute('href'), null);
   await page.unroute('**/downloads/desktop/latest.json');
