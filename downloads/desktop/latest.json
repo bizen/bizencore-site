@@ -1,20 +1,20 @@
 {
-  "version": "0.1.18",
+  "version": "0.1.19",
   "arch": "arm64",
-  "sha256": "89abbb5f4282ea9b73ef42a1ad6c309fb1a1181c0088639fb0cf624a8f41d3fc",
-  "size": 147013279,
-  "builtAt": "2026-10-20T09:24:53.401Z",
+  "sha256": "205b065fe21be0645b1d3d90b4663980f5aafe2ad6ec030b8ab19aacf0c54060",
+  "size": 147018828,
+  "builtAt": "2026-10-20T10:09:29.600Z",
   "channel": "production",
   "platform": "darwin",
   "minimumMacOs": "13.0",
   "pageUrl": "https://bizencore.com/downloads/",
-  "sourceCommit": "4882aecc6ef152f39bfae1e128f86d8808282b35",
+  "sourceCommit": "3eb9ea977cb9efcfbb97c2ab1df6d1c9f0ce4d02",
   "adHocSigned": true,
   "developerIdSigned": false,
   "notarized": false,
   "updateMethod": "manual",
   "published": true,
-  "downloadUrl": "https://github.com/bizen/bizencore-os/releases/download/desktop-v0.1.18/bizencore-terminal-0.1.18-darwin-arm64.zip",
-  "checksumUrl": "https://github.com/bizen/bizencore-os/releases/download/desktop-v0.1.18/SHA256SUMS",
-  "notesUrl": "https://github.com/bizen/bizencore-os/releases/tag/desktop-v0.1.18"
+  "downloadUrl": "https://github.com/bizen/bizencore-os/releases/download/desktop-v0.1.19/bizencore-terminal-0.1.19-darwin-arm64.zip",
+  "checksumUrl": "https://github.com/bizen/bizencore-os/releases/download/desktop-v0.1.19/SHA256SUMS",
+  "notesUrl": "https://github.com/bizen/bizencore-os/releases/tag/desktop-v0.1.19"
 }
